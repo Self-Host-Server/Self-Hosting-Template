@@ -22,25 +22,18 @@ trim = true
 
 [tool.git-cliff.git]
 conventional_commits = true
-# No catch-all parser: an unprefixed commit is dropped from release notes
-# entirely rather than lumped into a generic bucket. That's deliberate — it's
-# the signal that pushes contributors (human or AI) toward the right prefix
-# instead of silently degrading the changelog. See CONTRIBUTING.md.
-filter_unconventional = true
+filter_unconventional = false
 commit_parsers = [
   { message = "^feat", group = "✨ Features" },
   { message = "^fix", group = "🐛 Bug Fixes" },
   { message = "^docs", group = "📚 Documentation" },
   { message = "^refactor", group = "♻️ Refactoring" },
-  { message = "^perf", group = "⚡ Performance" },
   { message = "^test", group = "🧪 Tests" },
-  { message = "^style", group = "🔧 Chores" },
-  { message = "^build", group = "🔧 Chores" },
-  { message = "^ci", group = "🔧 Chores" },
+  { message = "^perf", group = "⚡ Performance" },
   { message = "^chore", group = "🔧 Chores" },
-  { message = "^revert", group = "🔧 Chores" },
+  { message = "^lint", group = "🔧 Chores" },
+  { message = ".*", group = "📝 Changes" },
 ]
-
 
 # =============================================================================
 # RUFF — Python linter & formatter
@@ -67,7 +60,7 @@ work_dir = "/tmp/.tox"
 # Shared base config inherited by all envs
 [tool.tox.env_run_base]
 pass_env = ["PATH"]
-set_env = { VIRTUALENV_OVERRIDE_APP_DATA = "{work_dir}/.virtualenv" }
+set_env = { VIRTUALENV_OVERRIDE_APP_DATA = "{work_dir}/.virtualenv", PRETTIER_GLOB = "**/*.{css,js,html,json,yml,yaml,md}" }
 
 # --- Linting ----------------------------------------------------------------
 
@@ -100,6 +93,16 @@ commands = [
   ],
 ]
 
+# [tool.tox.env."combined-imports-check"]
+# skip_install = true
+# deps = []
+# commands = [["python3", "Python/scripts/combined_imports_check.py"]]
+
+# [tool.tox.env."no-classes-check"]
+# skip_install = true
+# deps = []
+# commands = [["python3", "Python/scripts/no_classes_check.py"]]
+
 # --- Formatting -------------------------------------------------------------
 
 [tool.tox.env.format]
@@ -107,6 +110,11 @@ skip_install = true
 deps = ["ruff", "ty"]
 allowlist_externals = ["npx"]
 commands = [
+  # [
+  #   "python3",
+  #   "Python/scripts/combined_imports_check.py",
+  #   "--fix",
+  # ],
   [
     "ruff",
     "format",
@@ -128,7 +136,7 @@ commands = [
     "--write",
     "--log-level",
     "log",
-    "**/*.{css,js,html,json,yml,yaml,md}",
+    "{env:PRETTIER_GLOB}",
   ],
   [
     "npx",
@@ -139,17 +147,15 @@ commands = [
   ],
 ]
 
+# [tool.tox.env.scss]
+# skip_install = true
+# allowlist_externals = ["npx"]
+# commands = [["npx", "sass", "--no-source-map", "static/scss:static/css"]]
+
 [tool.tox.env.prettier]
 skip_install = true
 allowlist_externals = ["npx"]
-commands = [
-  [
-    "npx",
-    "prettier",
-    "--check",
-    "**/*.{css,js,html,json,yml,yaml,md}",
-  ],
-]
+commands = [["npx", "prettier", "--check", "{env:PRETTIER_GLOB}"]]
 
 [tool.tox.env."toml-lint"]
 skip_install = true
@@ -172,6 +178,25 @@ commands = [
   ],
 ]
 
+# --- Security -----------------------------------------------------------
+
+[tool.tox.env."secret-detection"]
+skip_install = true
+allowlist_externals = ["docker"]
+commands = [
+  [
+    "docker",
+    "run",
+    "--rm",
+    "-v",
+    "{toxinidir}:/repo",
+    "trufflesecurity/trufflehog:latest",
+    "git",
+    "file:///repo",
+    "--results=verified,unverified,unknown",
+    "--fail",
+  ],
+]
 
 # --- Aggregate (CI) ---------------------------------------------------------
 
@@ -181,6 +206,11 @@ skip_install = true
 deps = []
 allowlist_externals = ["tox"]
 commands = [
+#   [
+#     "tox",
+#     "-e",
+#     "no-classes-check",
+#   ],
   [
     "tox",
     "-e",
@@ -201,6 +231,11 @@ commands = [
     "-e",
     "toml-lint",
   ],
+  [
+    "tox",
+    "-e",
+    "combined-imports-check",
+  ],
 ]
 
 # Runs format then the full github chain
@@ -208,4 +243,20 @@ commands = [
 skip_install = true
 deps = []
 allowlist_externals = ["tox"]
-commands = [["tox", "-e", "format"], ["tox", "-e", "github"]]
+commands = [
+  [
+    "tox",
+    "-e",
+    "format",
+  ],
+  [
+    "tox",
+    "-e",
+    "github",
+  ],
+  [
+    "tox",
+    "-e",
+    "secret-detection",
+  ],
+]
