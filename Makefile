@@ -8,6 +8,8 @@ endif
 
 node:
 	conda run -n $(conda_name) nodeenv -p
+	npm install
+	npm update
 
 conda:
 	conda env create -f environment.yml -n $(conda_name)
