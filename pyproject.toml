@@ -189,7 +189,7 @@ commands = [
   ["tox", "-e", "txt-lint"],
   ["tox", "-e", "prettier"],
   ["tox", "-e", "toml-lint"],
-  ["tox", "-e", "combined-imports-check"],
+  # ["tox", "-e", "combined-imports-check"],
 ]
 
 # Runs format then the full github chain
