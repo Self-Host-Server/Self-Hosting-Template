@@ -11,3 +11,4 @@ node:
 
 conda:
 	conda env create -f environment.yml -n $(conda_name)
+	make node
