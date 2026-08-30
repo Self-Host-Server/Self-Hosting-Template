@@ -115,36 +115,10 @@ commands = [
   #   "Python/scripts/combined_imports_check.py",
   #   "--fix",
   # ],
-  [
-    "ruff",
-    "format",
-    "--no-cache",
-    "--verbose",
-    ".",
-  ],
-  [
-    "ruff",
-    "check",
-    "--no-cache",
-    "--fix",
-    "--verbose",
-    ".",
-  ],
-  [
-    "npx",
-    "prettier",
-    "--write",
-    "--log-level",
-    "log",
-    "{env:PRETTIER_GLOB}",
-  ],
-  [
-    "npx",
-    "@taplo/cli",
-    "fmt",
-    "--no-auto-config",
-    "**/*.toml",
-  ],
+  ["ruff", "format", "--no-cache", "--verbose", "."],
+  ["ruff", "check", "--no-cache", "--fix", "--verbose", "."],
+  ["npx", "prettier", "--write", "--log-level", "log", "{env:PRETTIER_GLOB}"],
+  ["npx", "@taplo/cli", "fmt", "--no-auto-config", "**/*.toml"],
 ]
 
 # [tool.tox.env.scss]
@@ -206,36 +180,16 @@ skip_install = true
 deps = []
 allowlist_externals = ["tox"]
 commands = [
-#   [
-#     "tox",
-#     "-e",
-#     "no-classes-check",
-#   ],
-  [
-    "tox",
-    "-e",
-    "lint",
-  ],
-  [
-    "tox",
-    "-e",
-    "txt-lint",
-  ],
-  [
-    "tox",
-    "-e",
-    "prettier",
-  ],
-  [
-    "tox",
-    "-e",
-    "toml-lint",
-  ],
-  [
-    "tox",
-    "-e",
-    "combined-imports-check",
-  ],
+  #   [
+  #     "tox",
+  #     "-e",
+  #     "no-classes-check",
+  #   ],
+  ["tox", "-e", "lint"],
+  ["tox", "-e", "txt-lint"],
+  ["tox", "-e", "prettier"],
+  ["tox", "-e", "toml-lint"],
+  ["tox", "-e", "combined-imports-check"],
 ]
 
 # Runs format then the full github chain
