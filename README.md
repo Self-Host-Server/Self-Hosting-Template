@@ -15,6 +15,7 @@ A GitHub template repo for bootstrapping new self-hosting projects with linting,
   - `all` — `format` then `github`
   - Also configures [git-cliff](https://git-cliff.org/) for generating changelogs/PR descriptions from Conventional Commits.
 - **`package.json`** — `prettier` and `textlint` (+ plugins), installed on demand by the relevant tox envs.
+- **`scripts/render_env_docs.py`** — renders `*.md.template` files, substituting `${VAR}` / `${VAR:-default}` / `${VAR:?message}` references (same syntax as `compose.yml`) from `.env`. Run it via `tox -e render-docs` or `make render-docs`. Write `docs/setup.md.template`, run the renderer, and it produces `docs/setup.md` with real values filled in. **Don't use this for docs that get committed if `.env` holds secrets** — either keep the rendered output gitignored, or only template non-sensitive values (domain, ports) and leave real secrets out of the template entirely.
 - **`.github/workflows/`**
   - `tests.yml` — runs `tox -e github` on every push and PR.
   - `secret-detection.yml` — [TruffleHog](https://github.com/trufflesecurity/trufflehog) scan on every push and PR.

@@ -103,6 +103,20 @@ commands = [
 # deps = []
 # commands = [["python3", "Python/scripts/no_classes_check.py"]]
 
+# --- Docs ---------------------------------------------------------------
+
+# Renders *.md.template files (see scripts/render_env_docs.py), substituting
+# ${VAR} / ${VAR:-default} / ${VAR:?message} references from .env, same
+# syntax as compose.yml. Not part of the "all"/"github" chains -- run it
+# explicitly (or via `make render-docs`) since it writes files and its
+# output can embed values from .env that shouldn't be committed if they're
+# secrets. Safe to leave enabled even in repos with no *.md.template files;
+# it's a no-op then.
+[tool.tox.env."render-docs"]
+skip_install = true
+deps = []
+commands = [["python3", "scripts/render_env_docs.py"]]
+
 # --- Formatting -------------------------------------------------------------
 
 [tool.tox.env.format]

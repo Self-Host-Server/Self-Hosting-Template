@@ -1,4 +1,4 @@
-.PHONY: node conda
+.PHONY: node conda render-docs
 
 # Load .env file
 ifneq (,$(wildcard .env))
@@ -16,3 +16,6 @@ node:
 conda:
 	conda env create -f environment.yml -n $(conda_name)
 	make node
+
+render-docs:
+	$(run) python3 scripts/render_env_docs.py
