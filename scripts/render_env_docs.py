@@ -20,9 +20,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 ENV_FILE = REPO_ROOT / ".env"
 SKIP_DIRS = {".git", ".tox", "node_modules", "__pycache__"}
 
-VAR_PATTERN = re.compile(
-    r"\$\{([A-Za-z_][A-Za-z0-9_]*)(?:(:-)([^}]*)|(:\?)([^}]*))?\}"
-)
+VAR_PATTERN = re.compile(r"\$\{([A-Za-z_][A-Za-z0-9_]*)(?:(:-)([^}]*)|(:\?)([^}]*))?\}")
 
 
 def load_dotenv(path):

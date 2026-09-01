@@ -1,4 +1,6 @@
 {
+  "name": "self-hosting-template",
+  "private": true,
   "dependencies": {
     "prettier": "^3.9.6"
   },

@@ -54,7 +54,14 @@ ignore = ["E203", "E501", "E701", "E401", "B008"]
 
 # Default envs run when you type `tox` with no arguments
 [tool.tox]
-env_list = ["lint", "txt-lint", "format", "prettier", "toml-lint", "duplicate-code"]
+env_list = [
+  "lint",
+  "txt-lint",
+  "format",
+  "prettier",
+  "toml-lint",
+  "duplicate-code",
+]
 work_dir = "/tmp/.tox"
 
 # Shared base config inherited by all envs
@@ -174,10 +181,7 @@ commands = [
 [tool.tox.env."duplicate-code"]
 skip_install = true
 allowlist_externals = ["npx", "npm"]
-commands = [
-  ["npm", "install", "--save-dev", "jscpd"],
-  ["npx", "jscpd", "."],
-]
+commands = [["npm", "install", "--save-dev", "jscpd"], ["npx", "jscpd", "."]]
 
 # --- Security -----------------------------------------------------------
 
