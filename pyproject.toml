@@ -54,7 +54,7 @@ ignore = ["E203", "E501", "E701", "E401", "B008"]
 
 # Default envs run when you type `tox` with no arguments
 [tool.tox]
-env_list = ["lint", "txt-lint", "format", "prettier", "toml-lint"]
+env_list = ["lint", "txt-lint", "format", "prettier", "toml-lint", "duplicate-code"]
 work_dir = "/tmp/.tox"
 
 # Shared base config inherited by all envs
@@ -166,6 +166,19 @@ commands = [
   ],
 ]
 
+# --- Duplication --------------------------------------------------------
+
+# Zero-tolerance duplicate-code check (jscpd, config in .jscpd.json). Real
+# duplication found should be refactored into a shared file the callers
+# source/import, not waved off by raising the threshold.
+[tool.tox.env."duplicate-code"]
+skip_install = true
+allowlist_externals = ["npx", "npm"]
+commands = [
+  ["npm", "install", "--save-dev", "jscpd"],
+  ["npx", "jscpd", "."],
+]
+
 # --- Security -----------------------------------------------------------
 
 [tool.tox.env."secret-detection"]
@@ -188,7 +201,7 @@ commands = [
 
 # --- Aggregate (CI) ---------------------------------------------------------
 
-# Runs the full CI chain: no-classes-check → lint → txt-lint → prettier → tests
+# Runs the full CI chain: lint → txt-lint → prettier → toml-lint → duplicate-code
 [tool.tox.env.github]
 skip_install = true
 deps = []
@@ -203,6 +216,7 @@ commands = [
   ["tox", "-e", "txt-lint"],
   ["tox", "-e", "prettier"],
   ["tox", "-e", "toml-lint"],
+  ["tox", "-e", "duplicate-code"],
   # ["tox", "-e", "combined-imports-check"],
 ]
 

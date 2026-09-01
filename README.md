@@ -11,7 +11,8 @@ A GitHub template repo for bootstrapping new self-hosting projects with linting,
   - `txt-lint` — [textlint](https://textlint.github.io/) over `**/*.txt`
   - `prettier` — `prettier --check` over CSS/JS/HTML/JSON/YAML/Markdown
   - `toml-lint` — `taplo` format/lint check over TOML files
-  - `github` — the full read-only CI chain (`lint` + `txt-lint` + `prettier` + `toml-lint`)
+  - `duplicate-code` — [jscpd](https://github.com/kucherenko/jscpd) zero-tolerance duplicate-code scan (config in `.jscpd.json`). Real duplication should be refactored into a shared file the callers source/import, not waved off by raising the threshold.
+  - `github` — the full read-only CI chain (`lint` + `txt-lint` + `prettier` + `toml-lint` + `duplicate-code`)
   - `all` — `format` then `github`
   - Also configures [git-cliff](https://git-cliff.org/) for generating changelogs/PR descriptions from Conventional Commits.
 - **`package.json`** — `prettier` and `textlint` (+ plugins), installed on demand by the relevant tox envs.
@@ -37,7 +38,7 @@ A GitHub template repo for bootstrapping new self-hosting projects with linting,
 
    ```bash
    pip install tox
-   tox -e github   # lint + txt-lint + prettier + toml-lint
+   tox -e github   # lint + txt-lint + prettier + toml-lint + duplicate-code
    tox -e format   # auto-fix formatting issues
    ```
 
