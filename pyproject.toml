@@ -203,6 +203,16 @@ commands = [
   ],
 ]
 
+# Local equivalent of the dedicated zizmor.yml GitHub Actions workflow (static
+# analysis for GitHub Actions YAML -- catches template-injection, artipacked
+# credential leaks, unpinned action refs, overly broad permissions). Not in
+# env_list/github/all, same as secret-detection: enforced in CI via its own
+# workflow, not the tox chain, and pip-installing zizmor needs network access.
+[tool.tox.env.zizmor]
+skip_install = true
+allowlist_externals = ["pip", "zizmor"]
+commands = [["pip", "install", "zizmor"], ["zizmor", "."]]
+
 # --- Aggregate (CI) ---------------------------------------------------------
 
 # Runs the full CI chain: lint → txt-lint → prettier → toml-lint → duplicate-code

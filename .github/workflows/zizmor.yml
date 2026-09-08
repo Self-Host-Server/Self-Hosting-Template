@@ -1,8 +1,10 @@
-name: Code Quality
+name: Zizmor
 
 on:
   push:
-  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
 
 jobs:
   quality:
@@ -10,4 +12,4 @@ jobs:
       contents: read
     uses: $/.github/workflows/tox-check-reusable.yml
     with:
-      tox_env: github
+      tox_env: zizmor
